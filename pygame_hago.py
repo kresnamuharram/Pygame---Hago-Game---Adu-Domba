@@ -4,8 +4,9 @@ pygame.font.init()
 pygame.font.get_fonts()
 clock = pygame.time.Clock()
 
-
+########################################
 #function on main
+########################################
 def stage_field():
     pygame.draw.rect(screen, (0,240,0), jalur0, 0)
     pygame.draw.rect(screen, black, jalur0, 1)
@@ -30,7 +31,6 @@ def circle_guide():
     screen.blit(text_pion,(850,240))
     screen.blit(text_peluncur,(850,340))
     screen.blit(text_king,(850,440))
-
 #draw view
 def draw_view():
     stage_field()    
@@ -72,8 +72,11 @@ def draw_view():
     Lala.draw(screen)
     pygame.display.update()
 
+########################################
+#Funcion each path with array
+########################################
 #player func array
-def array0_func():
+def player_array0():
     global jalur0_trek
 
     for player in jalur0_array:
@@ -86,9 +89,20 @@ def array0_func():
         
     if jalur0_trek:
         for player in jalur0_array:
-            if not player0_react and not enemy0_react:
-                player.y -= 1  
-def array1_func():
+            if len(jalur0_array_enemy) == 0:
+                player.y -= 4
+            else: 
+                for enemy in jalur0_array_enemy:
+                    if player.rect[1]-enemy.rect[1] <=70:
+                        if player.power-enemy.power > 0:
+                            player.y -= player.power-enemy.power
+                        elif player.power-enemy.power < 0:
+                            player.y += enemy.power-player.power
+                        elif player.power-enemy.power == 0:
+                            player.y = player.y
+                    else:
+                        player.y -= 4
+def player_array1():
     global jalur1_trek
 
     for player in jalur1_array:
@@ -101,8 +115,8 @@ def array1_func():
         
     if jalur1_trek:
         for player in jalur1_array:
-            player.y -= 1  
-def array2_func():
+            player.y -= 4  
+def player_array2():
     global jalur2_trek
 
     for player in jalur2_array:
@@ -115,8 +129,8 @@ def array2_func():
         
     if jalur2_trek:
         for player in jalur2_array:
-            player.y -= 1 
-def array3_func():
+            player.y -= 4 
+def player_array3():
     global jalur3_trek
 
     for player in jalur3_array:
@@ -129,8 +143,8 @@ def array3_func():
         
     if jalur3_trek:
         for player in jalur3_array:
-            player.y -= 1  
-def array4_func():
+            player.y -= 4  
+def player_array4():
     global jalur4_trek
 
     for player in jalur4_array:
@@ -143,7 +157,7 @@ def array4_func():
         
     if jalur4_trek:
         for player in jalur4_array:
-            player.y -= 1  
+            player.y -= 4  
 #enemy func array
 def enemy_array0():
     global jalur0_trek_enemy
@@ -155,8 +169,20 @@ def enemy_array0():
         jalur0_trek_enemy = True       
     if jalur0_trek_enemy:
         for enemy in jalur0_array_enemy:
-            if not player0_react and not enemy0_react:
-                enemy.y += 1  
+            if len(jalur0_array) == 0:
+                enemy.y += 4
+            else: 
+                for player in jalur0_array:
+                    if player.rect[1]-enemy.rect[1] <=70:
+                        if player.power-enemy.power > 0:
+                            enemy.y -= player.power-enemy.power
+                        elif player.power-enemy.power < 0:
+                            enemy.y += enemy.power-player.power
+                        elif player.power-enemy.power == 0:
+                            enemy.y = enemy.y
+                    else:
+                        enemy.y += 4
+
 def enemy_array1():
     global jalur1_trek_enemy
     for enemy in jalur1_array_enemy:
@@ -167,7 +193,7 @@ def enemy_array1():
         jalur1_trek_enemy = True       
     if jalur1_trek_enemy:
         for enemy in jalur1_array_enemy:
-            enemy.y += 1  
+            enemy.y += 4 
 def enemy_array2():
     global jalur2_trek_enemy
     for enemy in jalur2_array_enemy:
@@ -178,7 +204,7 @@ def enemy_array2():
         jalur2_trek_enemy = True       
     if jalur2_trek_enemy:
         for enemy in jalur2_array_enemy:
-            enemy.y += 1
+            enemy.y += 4
 def enemy_array3():
     global jalur3_trek_enemy
     for enemy in jalur3_array_enemy:
@@ -200,8 +226,11 @@ def enemy_array4():
         jalur4_trek_enemy = True       
     if jalur4_trek_enemy:
         for enemy in jalur4_array_enemy:
-            enemy.y += 1  
+            enemy.y += 4  
 
+#########################################
+#Classes
+#########################################
 #class Player
 class Player:
     count_keys = 0
@@ -247,7 +276,6 @@ class Player_king(Player):
     def draw(self,screen):
         screen.blit(king,(self.x,self.y))
         self.rect = [self.x,self.y,self.width,self.height]
-
 #class Enemy
 class Enemy:
     count_keys = 0
@@ -294,24 +322,24 @@ class Enemy_king(Enemy):
         screen.blit(king,(self.x,self.y))
         self.rect = [self.x,self.y,self.width,self.height]
 
+
+########################################
+#Variable
+########################################
 #screen
 screen_width = 900
 screen_height = 580
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("coba2")
-
 #load
-bg = pygame.image.load('BG.png')
 pion = pygame.image.load('Pion.png')
 king = pygame.image.load('Raja.png')
 peluncur = pygame.image.load('Peluncur.png')
-
 #color
 black = (0,0,0)
 white = (255,255,255)
 green = (0,255,0)
 font = pygame.font.SysFont('freesansbold.tff', 32)
-
 #layout
 jalur0 = [300,90,100,400]
 jalur1 = [400,90,100,400]
@@ -320,8 +348,7 @@ jalur3 = [600,90,100,400]
 jalur4 = [700,90,100,400]
 penampil_player = 64
 penampil_enemy = 64
-
-#array
+######################################### array ########################################
 #array pemain
 jalur0_array = []
 jalur1_array = []
@@ -344,10 +371,6 @@ jalur1_trek_enemy = False
 jalur2_trek_enemy = False
 jalur3_trek_enemy = False
 jalur4_trek_enemy = False
-
-
-player0_react = False
-enemy0_react = False
 #variable
 enemy_count = 0
 time_waiting = 0
@@ -471,11 +494,11 @@ while True:
         elif player_random == 2:
             jalur4_array.append(Player_king(jalur4[0], 490, 64, 64))
         Player.count_keys += 1
-    array0_func() 
-    array1_func() 
-    array2_func() 
-    array3_func()
-    array4_func()
+    player_array0() 
+    player_array1() 
+    player_array2() 
+    player_array3() 
+    player_array4() 
 
 #start game
     if Player.count_keys:
@@ -495,24 +518,6 @@ while True:
             player_random = rand.randrange(0,3)
 
 #logic game
-    for enemy in jalur0_array_enemy:
-        for player in jalur0_array:
-            if player.rect[1]-enemy.rect[1] <=70:
-                if player.power-enemy.power > 0:
-                    enemy.y -= player.power-enemy.power-3
-                    player.y -= player.power-enemy.power-2
-                    player0_react = True
-                    enemy0_react = True
-                elif player.power-enemy.power < 0:
-                    enemy.y += enemy.power-player.power-2
-                    player.y += enemy.power-player.power-3
-                    player0_react = True
-                    enemy0_react = True
-                elif player.power-enemy.power == 0:
-                    enemy.y = enemy.y
-                    player.y = player.y
-                    player0_react = True
-                    enemy0_react = True
 
 #view
     draw_view()
