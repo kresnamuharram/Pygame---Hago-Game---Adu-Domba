@@ -77,7 +77,7 @@ def draw_view():
 ########################################
 #player func array
 def player_array0():
-    global jalur0_trek
+    global jalur0_trek,variabel0_jalur1_pemain
 
     for player in jalur0_array:
         if player.y <= 90:
@@ -89,8 +89,14 @@ def player_array0():
         
     if jalur0_trek:
         for player in jalur0_array:
+            for player_new in jalur0_array:
+                if player_new.rect[1]==player.rect[1]:
+                    continue
+                elif 0> player_new.rect[1]-player.rect[1] > (-70):
+                    player_new.power += player.power
+                    print(player_new.power)
             if len(jalur0_array_enemy) == 0:
-                player.y -= 4
+                player.y -= 1
             else: 
                 for enemy in jalur0_array_enemy:
                     if player.rect[1]-enemy.rect[1] <=70:
@@ -101,7 +107,7 @@ def player_array0():
                         elif player.power-enemy.power == 0:
                             player.y = player.y
                     else:
-                        player.y -= 4
+                        player.y -= 1
 def player_array1():
     global jalur1_trek
 
@@ -360,6 +366,12 @@ jalur1_trek = False
 jalur2_trek = False
 jalur3_trek = False
 jalur4_trek = False
+#variabel 0 untuk looping pada array pemain
+variabel0_jalur1_pemain = 0
+variabel0_jalur2_pemain = 0
+variabel0_jalur3_pemain = 0
+variabel0_jalur4_pemain = 0
+variabel0_jalur5_pemain = 0
 #array enemy
 jalur0_array_enemy = []
 jalur1_array_enemy = []
@@ -371,6 +383,14 @@ jalur1_trek_enemy = False
 jalur2_trek_enemy = False
 jalur3_trek_enemy = False
 jalur4_trek_enemy = False
+#variabel 0 untuk looping pada array enemy
+variabel0_jalur1_enemy = 0
+variabel0_jalur2_enemy = 0
+variabel0_jalur3_enemy = 0
+variabel0_jalur4_enemy = 0
+variabel0_jalur5_enemy = 0
+
+
 #variable
 enemy_count = 0
 time_waiting = 0
