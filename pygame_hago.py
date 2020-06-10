@@ -83,31 +83,41 @@ def player_array0():
         if player.y <= 90:
             jalur0_array.remove(player)
             jalur0_trek = False
+        if player.y > 490:
+            jalur0_array.remove(player)
 
     if len(jalur0_array) > 0:
         jalur0_trek = True
-        
+
     if jalur0_trek:
         for player in jalur0_array:
+            print(player.speed," speed player ")
             for player_new in jalur0_array:
                 if player_new.rect[1]==player.rect[1]:
                     continue
                 elif 0> player_new.rect[1]-player.rect[1] > (-70):
-                    player_new.power += player.power
-                    print(player_new.power)
+                    if not player.player_collide_player:
+                        player_new.power += player.power
+                        player.speed = player_new.power
+                        player.player_collide_player = True
+                        if player.speed >4:
+                            player.speed = 4
             if len(jalur0_array_enemy) == 0:
-                player.y -= 1
+                player.y -= player.speed
             else: 
                 for enemy in jalur0_array_enemy:
                     if player.rect[1]-enemy.rect[1] <=70:
                         if player.power-enemy.power > 0:
-                            player.y -= player.power-enemy.power
+                            player.speed = player.power-enemy.power
+                            player.y -= player.speed
                         elif player.power-enemy.power < 0:
-                            player.y += enemy.power-player.power
+                            player.speed = enemy.power-player.power
+                            player.y += player.speed
                         elif player.power-enemy.power == 0:
-                            player.y = player.y
+                            player.speed = 0
+                            player.y -= player.speed
                     else:
-                        player.y -= 1
+                        player.y -= player.speed
 def player_array1():
     global jalur1_trek
 
@@ -175,20 +185,34 @@ def enemy_array0():
         jalur0_trek_enemy = True       
     if jalur0_trek_enemy:
         for enemy in jalur0_array_enemy:
+            for enemy_new in jalur0_array_enemy:
+                if enemy_new.rect[1]==enemy.rect[1]:
+                    continue
+                elif 0 > enemy_new.rect[1]-enemy.rect[1] > (-70):
+                    if not enemy.enemy_collide_enemy:
+                        enemy_new.power += enemy.power
+                        enemy.speed =enemy_new.power
+                        enemy.enemy_collide_enemy = True
+                        if enemy.speed > 4:
+                            enemy.speed = 4
             if len(jalur0_array) == 0:
                 enemy.y += 4
             else: 
                 for player in jalur0_array:
                     if player.rect[1]-enemy.rect[1] <=70:
                         if player.power-enemy.power > 0:
-                            enemy.y -= player.power-enemy.power
+                            enemy.speed = player.power-enemy.power
+                            enemy.y -= enemy.speed
+                            print(enemy.speed, " player kuat")
                         elif player.power-enemy.power < 0:
-                            enemy.y += enemy.power-player.power
+                            enemy.speed = enemy.power-player.power
+                            enemy.y += enemy.speed
                         elif player.power-enemy.power == 0:
-                            enemy.y = enemy.y
+                            enemy.speed = 0
+                            enemy.y += enemy.speed
+                        
                     else:
                         enemy.y += 4
-
 def enemy_array1():
     global jalur1_trek_enemy
     for enemy in jalur1_array_enemy:
@@ -261,6 +285,8 @@ class Player_pion(Player):
         self.power = 1
         self.attack = 4
         self.rect = [self.x,self.y+10,self.width,self.height-10]
+        self.player_collide_player = False
+        self.speed = 4
     def draw(self,screen):
         screen.blit(pion,(self.x,self.y))
         self.rect = [self.x,self.y+10,self.width,self.height-10]
@@ -270,6 +296,8 @@ class Player_peluncur(Player):
         self.power = 2
         self.attack = 2
         self.rect = [self.x,self.y+10,self.width,self.height-10]
+        self.player_collide_player = False
+        self.speed = 4
     def draw(self,screen):
         screen.blit(peluncur,(self.x,self.y))
         self.rect = [self.x,self.y+10,self.width,self.height-10]
@@ -279,6 +307,8 @@ class Player_king(Player):
         self.power = 4
         self.attack = 1
         self.rect = [self.x,self.y,self.width,self.height]
+        self.player_collide_player = False
+        self.speed = 4
     def draw(self,screen):
         screen.blit(king,(self.x,self.y))
         self.rect = [self.x,self.y,self.width,self.height]
@@ -306,15 +336,20 @@ class Enemy_pion(Enemy):
         self.power = 1
         self.attack = 4
         self.rect = [self.x,self.y+10,self.width,self.height-10]
+        self.speed = 4
+        self.enemy_collide_enemy = False
     def draw(self,screen):
         screen.blit(pion,(self.x,self.y))
         self.rect = [self.x,self.y+10,self.width,self.height-10]
+        self.speed = 4
 class Enemy_peluncur(Enemy):   
     def __init__ (self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.power = 2
         self.attack = 2
         self.rect = [self.x,self.y+10,self.width,self.height-10]
+        self.speed = 4
+        self.enemy_collide_enemy = False
     def draw(self,screen):
         screen.blit(peluncur,(self.x,self.y))
         self.rect = [self.x,self.y+10,self.width,self.height-10]
@@ -324,6 +359,8 @@ class Enemy_king(Enemy):
         self.power = 4
         self.attack = 1
         self.rect = [self.x,self.y,self.width,self.height]
+        self.speed = 4
+        self.enemy_collide_enemy = False
     def draw(self,screen):
         screen.blit(king,(self.x,self.y))
         self.rect = [self.x,self.y,self.width,self.height]
